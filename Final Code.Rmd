@@ -140,4 +140,35 @@ cnt_graph <- ggplot(frq2, aes(x = Lat, y = Lon, z = value, fill = value)) + geom
 ```
 
 ```{r year plots}
-#We have identified 2014, 1931, 1936, 1956, 2002, and 1961 as the years that deserve a closer look.  The plot from this code will be a 5 x 6 plot, with the year in question as the rightmost plot.
+#We have identified 2014, 1931, 1936, 1956, 2002, and 1961 as the years that deserve a closer look.  The plot from this code will be a 3 x 6 plot, with the year in question as the rightmost plot.
+#1929:31, 34:36, 54:56, 59:61, 00:02, 12:14
+mi1 <- ifelse((md00ygs[,,1:97]>=1)==1,1,NA)
+mi1r <- md00ygs * mi1
+mi21r <- md00ygs[,,2:97] * mi21
+mi31r <- md00ygs[,,3:97] * mi31
+dimnames(mi1r)[[3]] <- 1918:2014
+dimnames(mi21r)[[3]] <- 1919:2014
+dimnames(mi31r)[[3]] <- 1920:2014
+
+nn <- melt(data.frame("1929" = melt(mi1r[,,"1929"])[,3],"1930" = melt(mi21r[,,"1930"])[,3],"1931" = melt(mi31r[,,"1931"])[,3],"1934" = melt(mi1r[,,"1934"])[,3],"1935" = melt(mi21r[,,"1935"])[,3],"1936" = melt(mi31r[,,"1936"])[,3],"1954" = melt(mi1r[,,"1954"])[,3],"1955" = melt(mi21r[,,"1955"])[,3],"1956" = melt(mi31r[,,"1956"])[,3],"1959" = melt(mi1r[,,"1959"])[,3],"1960" = melt(mi21r[,,"1960"])[,3],"1961" = melt(mi31r[,,"1961"])[,3],"2000" = melt(mi1r[,,"2000"])[,3],"2001" = melt(mi21r[,,"2001"])[,3],"2002" = melt(mi31r[,,"2002"])[,3],"2012" = melt(mi1r[,,"2012"])[,3],"2013" = melt(mi21r[,,"2013"])[,3],"2014" = melt(mi31r[,,"2014"])[,3]))
+
+nn$Lat <- rep(melt(mi31[,,"2014"])[,1], 18)
+nn$Lon <- rep(melt(mi31[,,"2014"])[,2], 18)
+nn$Year <- rep(c(1931,1936,1956,1961,2002,2014), each = 26026*3 )
+nn$Period <- rep(c("a","b","c"), each = 26026)
+
+ggplot(nn, aes(x = Lat, y = Lon, z = value, fill = value)) + geom_tile() + coord_equal() +  scale_fill_distiller(palette="Spectral", na.value="white") + borders("state", xlim = c(-124.6875, -102.0625), ylim = c(31.1875, 48.9375)) + facet_grid(Period~Year) + theme_minimal()
+#This graph shows the progression of drought cores, with values equal to that years md00 zscores.  c is the final year in the 3 year window, a is two years before
+
+
+```
+
+```{r Line plots}
+#Line plots of md0, md00, tavg, and prec, for five years leading to the drought year, maybe one additional year, by water year.
+all_var$mi31 <- NA
+all_var[624625:30294264,"mi31"] <- as.list(aperm(apply(mi31, 1:2, function(x) rep(x, each = 12)), c(2,3,1))) # from 1920 to 2014, the full dataset goes from 1918 to 2014
+all_var[624625:30294264,"mi31"]
+all_var$mi31r <- all_var$mi31 * all_var$md00ygs
+
+#apply mean to md00 by year
+aggregate(mi31r ~ year, data = all_var, mean, na.rm = T)

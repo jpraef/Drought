@@ -166,11 +166,10 @@ map_plt <- ggplot(nn, aes(x = Lat, y = Lon, z = value, fill = value)) + geom_til
 ```{r Line plots}
 #Line plots of md0, md00, tavg, and prec, for five years leading to the drought year, maybe one additional year, by water year.
 all_var$mi31 <- NA
-all_var[624625:30294264,"mi31"] <- 
-  
-mi31l <- as.list(aperm(apply(mi31, 1:2, function(x) rep(x, each = 12)), c(2,3,1))) # from 1920 to 2014, the full dataset goes from 1918 to 2014
-all_var[624625:30294264,"mi31"]
-all_var$mi31r <- all_var$mi31 * all_var$md00ygs
+m031  <- ifelse(((md00ygs[,,1:95]>=1)+(md00ygs[,,2:96]>=1)+(md00ygs[,,3:97]>=1))==3,1,0) 
+m031l <- as.numeric(aperm(apply(m031, 1:2, function(x) rep(x, each = 12)), c(2,3,1))) # from 1920 to 2014, the full dataset goes from 1918 to 2014
+all_var[624625:30294264,"mi31"] <- m031l
+all_var$mi31rr <- all_var$mi31 * all_var$md00ygs #scaled values subsetted by cores
 
 #apply mean to md00 by year
-aggregate(mi31r ~ year, data = all_var, mean, na.rm = T)
+aggregate(mi31rr ~ year, data = all_var, mean, na.rm = T)

@@ -97,7 +97,7 @@ for (i in 1:95){
 
 int_lab<- as.data.frame(cbind(rnk_int$Year[which(rnk_int$Intensity >= 2000)], rnk_int$Intensity[which(rnk_int$Intensity >= 2000)]))
 
-ggplot(data = rnk_int, aes(x = Year, y = Intensity)) + geom_line() + labs(title = "Sum of SD in drought areas, years -3 to 0", x = "Year", y = "Sum S.D.") + geom_label(data = int_lab, aes(x = V1, y = V2, label = V1), position = "dodge") +theme_minimal()
+int_grph <- ggplot(data = rnk_int, aes(x = Year, y = Intensity)) + geom_line() + labs(title = "Sum of SD in drought areas, years -3 to 0", x = "Year", y = "Sum S.D.") + geom_label(data = int_lab, aes(x = V1, y = V2, label = V1), position = "jitter") +theme_minimal()
 
 ```
 
@@ -152,8 +152,8 @@ dimnames(mi31r)[[3]] <- 1920:2014
 
 nn <- melt(data.frame("1929" = melt(mi1r[,,"1929"])[,3],"1930" = melt(mi21r[,,"1930"])[,3],"1931" = melt(mi31r[,,"1931"])[,3],"1934" = melt(mi1r[,,"1934"])[,3],"1935" = melt(mi21r[,,"1935"])[,3],"1936" = melt(mi31r[,,"1936"])[,3],"1954" = melt(mi1r[,,"1954"])[,3],"1955" = melt(mi21r[,,"1955"])[,3],"1956" = melt(mi31r[,,"1956"])[,3],"1959" = melt(mi1r[,,"1959"])[,3],"1960" = melt(mi21r[,,"1960"])[,3],"1961" = melt(mi31r[,,"1961"])[,3],"2000" = melt(mi1r[,,"2000"])[,3],"2001" = melt(mi21r[,,"2001"])[,3],"2002" = melt(mi31r[,,"2002"])[,3],"2012" = melt(mi1r[,,"2012"])[,3],"2013" = melt(mi21r[,,"2013"])[,3],"2014" = melt(mi31r[,,"2014"])[,3]))
 
-nn$Lat <- rep(melt(mi31[,,"2014"])[,1], 18)
-nn$Lon <- rep(melt(mi31[,,"2014"])[,2], 18)
+nn$Lat <- rep(melt(mi31r[,,"2014"])[,1], 18)
+nn$Lon <- rep(melt(mi31r[,,"2014"])[,2], 18)
 nn$Year <- rep(c(1931,1936,1956,1961,2002,2014), each = 26026*3 )
 nn$Period <- rep(c("a","b","c"), each = 26026)
 

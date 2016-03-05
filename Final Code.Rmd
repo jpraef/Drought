@@ -157,7 +157,7 @@ nn$Lon <- rep(melt(mi31r[,,"2014"])[,2], 18)
 nn$Year <- rep(c(1931,1936,1956,1961,2002,2014), each = 26026*3 )
 nn$Period <- rep(c("a","b","c"), each = 26026)
 
-ggplot(nn, aes(x = Lat, y = Lon, z = value, fill = value)) + geom_tile() + coord_equal() +  scale_fill_distiller(palette="Spectral", na.value="white") + borders("state", xlim = c(-124.6875, -102.0625), ylim = c(31.1875, 48.9375)) + facet_grid(Period~Year) + theme_minimal()
+map_plt <- ggplot(nn, aes(x = Lat, y = Lon, z = value, fill = value)) + geom_tile() + coord_equal() +  scale_fill_distiller(palette="Spectral", na.value="white") + borders("state", xlim = c(-124.6875, -102.0625), ylim = c(31.1875, 48.9375)) + facet_grid(Period~Year) + theme_minimal()
 #This graph shows the progression of drought cores, with values equal to that years md00 zscores.  c is the final year in the 3 year window, a is two years before
 
 
@@ -166,7 +166,9 @@ ggplot(nn, aes(x = Lat, y = Lon, z = value, fill = value)) + geom_tile() + coord
 ```{r Line plots}
 #Line plots of md0, md00, tavg, and prec, for five years leading to the drought year, maybe one additional year, by water year.
 all_var$mi31 <- NA
-all_var[624625:30294264,"mi31"] <- as.list(aperm(apply(mi31, 1:2, function(x) rep(x, each = 12)), c(2,3,1))) # from 1920 to 2014, the full dataset goes from 1918 to 2014
+all_var[624625:30294264,"mi31"] <- 
+  
+mi31l <- as.list(aperm(apply(mi31, 1:2, function(x) rep(x, each = 12)), c(2,3,1))) # from 1920 to 2014, the full dataset goes from 1918 to 2014
 all_var[624625:30294264,"mi31"]
 all_var$mi31r <- all_var$mi31 * all_var$md00ygs
 
